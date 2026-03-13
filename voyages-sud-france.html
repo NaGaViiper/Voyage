@@ -15,7 +15,7 @@
   overflow:hidden;
   padding:0;
 }
-.orbs{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.orbs{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
 .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.10}
 .o1{width:500px;height:500px;background:radial-gradient(#c8a96e,transparent);top:-200px;left:-150px;animation:d1 20s ease-in-out infinite}
 .o2{width:350px;height:350px;background:radial-gradient(#6b9fd4,transparent);bottom:-80px;right:-80px;animation:d2 16s ease-in-out infinite}
@@ -121,6 +121,192 @@
 .fbar-chip-x      {opacity:.45;font-size:.55rem}
 .fbar-no-filter   {font-size:.65rem;color:rgba(232,230,224,.2);font-style:italic;white-space:nowrap}
 
+
+/* ─── LIGHTBOX PHOTO ─── */
+.lb-overlay{
+  display:none;position:fixed;inset:0;z-index:30000;
+  background:rgba(0,0,0,.92);
+  cursor:zoom-out;
+  align-items:center;justify-content:center;
+  flex-direction:column;gap:1rem;
+}
+.lb-overlay.show{display:flex;animation:fi .2s ease}
+.lb-img{
+  max-width:min(1200px,95vw);max-height:85vh;
+  border-radius:12px;
+  object-fit:contain;
+  box-shadow:0 32px 80px rgba(0,0,0,.7);
+  animation:lbIn .3s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes lbIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+.lb-caption{
+  font-size:.85rem;color:rgba(255,255,255,.65);
+  font-family:'Cormorant Garamond',serif;font-size:1.1rem;letter-spacing:.04em;
+  text-align:center;
+}
+.lb-close{
+  position:fixed;top:1.2rem;right:1.4rem;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  border-radius:50%;width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:.9rem;cursor:pointer;
+  transition:all .2s;z-index:30001;
+}
+.lb-close:hover{background:rgba(255,255,255,.2);transform:scale(1.1)}
+.lb-hint{
+  position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);
+  font-size:.62rem;color:rgba(255,255,255,.3);letter-spacing:.08em;text-transform:uppercase;
+  pointer-events:none;
+}
+/* Curseur zoom sur la photo de la carte */
+.ctop-bg.img-loaded{cursor:zoom-in}
+
+/* ─── QUICK VIEW PANEL ─── */
+.qvp-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:19000;
+}
+.qvp-overlay.show{display:block;animation:fi .2s ease}
+.qvp-panel{
+  position:fixed;top:0;right:0;bottom:0;
+  width:min(680px,100vw);
+  z-index:19001;
+  background:var(--panel);
+  border-left:1px solid var(--border2);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform .32s cubic-bezier(.2,.8,.2,1);
+  overflow:hidden;
+}
+.qvp-panel.show{transform:translateX(0)}
+.qvp-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1.2rem;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+  background:rgba(255,255,255,.02);
+}
+.qvp-header-left{display:flex;align-items:center;gap:.7rem;min-width:0}
+.qvp-city{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--text)}
+.qvp-country{font-size:.72rem;color:var(--muted)}
+.qvp-close{
+  width:30px;height:30px;border-radius:50%;
+  border:1px solid var(--border2);background:rgba(255,255,255,.05);
+  color:var(--muted);cursor:pointer;font-size:.75rem;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .18s;
+}
+.qvp-close:hover{background:rgba(255,255,255,.12);color:var(--text)}
+.qvp-body{
+  flex:1;overflow-y:auto;
+  padding:0;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(200,169,110,.2) transparent;
+}
+.qvp-card-wrap{padding:0}
+/* Bouton Quick View sur chaque carte */
+.qv-detail-btn{
+  width:100%;padding:.65rem;
+  border-radius:var(--radius-sm);
+  border:1px solid rgba(200,169,110,.35);
+  background:linear-gradient(135deg,rgba(200,169,110,.1),rgba(200,169,110,.05));
+  color:var(--accent2);
+  font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:700;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  margin-top:.7rem;position:relative;z-index:10;
+  letter-spacing:.02em;
+}
+.qv-detail-btn:hover{
+  background:linear-gradient(135deg,rgba(200,169,110,.2),rgba(200,169,110,.1));
+  border-color:rgba(200,169,110,.6);
+  transform:translateY(-2px);
+  box-shadow:0 4px 16px rgba(200,169,110,.15);
+}
+
+
+
+/* ─── SÉLECTEUR DÉPART GLOBAL ─── */
+.dep-global-wrap{
+  display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;
+  padding:.65rem .9rem;
+  background:linear-gradient(135deg,rgba(200,169,110,.08),rgba(200,169,110,.04));
+  border:1px solid rgba(200,169,110,.2);
+  border-radius:12px;
+  margin-bottom:.8rem;
+}
+.dep-global-label{
+  font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);white-space:nowrap;flex-shrink:0;
+}
+.dep-global-pills{display:flex;gap:.35rem;flex-wrap:wrap}
+.dep-global-btn{
+  padding:.32rem .85rem;border-radius:20px;
+  border:1px solid rgba(255,255,255,.12);
+  background:transparent;color:var(--muted);
+  font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;
+  cursor:pointer;transition:all .18s;white-space:nowrap;
+}
+.dep-global-btn:hover{border-color:rgba(200,169,110,.4);color:var(--accent)}
+.dep-global-btn.active{
+  background:rgba(200,169,110,.15);
+  border-color:rgba(200,169,110,.5);
+  color:var(--accent2);
+}
+.dep-global-btn.paris.active{
+  background:rgba(155,127,212,.15);
+  border-color:rgba(155,127,212,.5);
+  color:var(--purple);
+}
+.dep-global-btn.paris:hover{border-color:rgba(155,127,212,.4);color:var(--purple)}
+
+/* Sélecteur départ dans la fbar sticky */
+.fbar-dep-sticky{
+  display:flex;gap:.2rem;flex-shrink:0;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;padding:.15rem;
+}
+.fbar-dep-btn{
+  padding:.22rem .55rem;border-radius:16px;border:none;
+  background:transparent;color:var(--muted);
+  font-family:'Outfit',sans-serif;font-size:.65rem;font-weight:700;
+  cursor:pointer;transition:all .18s;white-space:nowrap;
+}
+.fbar-dep-btn:hover{color:var(--text)}
+.fbar-dep-btn.active{background:rgba(200,169,110,.2);color:var(--accent2)}
+.fbar-dep-btn.paris.active{background:rgba(155,127,212,.2);color:var(--purple)}
+
+/* ─── FBAR STICKY SEARCH ─── */
+.fbar-sticky-search{
+  display:flex;align-items:center;gap:.3rem;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;padding:.22rem .5rem .22rem .7rem;
+  min-width:140px;max-width:200px;flex-shrink:0;
+  transition:border-color .2s,background .2s;
+}
+.fbar-sticky-search:focus-within{
+  border-color:rgba(200,169,110,.45);
+  background:rgba(200,169,110,.05);
+}
+.fbar-search-ico{font-size:.7rem;opacity:.4;flex-shrink:0}
+.fbar-search-input{
+  flex:1;background:transparent;border:none;outline:none;
+  color:var(--text);font-family:'Outfit',sans-serif;
+  font-size:.7rem;min-width:0;
+}
+.fbar-search-input::placeholder{color:rgba(232,230,224,.3)}
+.fbar-search-clear{
+  background:none;border:none;color:var(--muted);
+  cursor:pointer;font-size:.6rem;padding:0 .1rem;
+  opacity:0;transition:opacity .15s;flex-shrink:0;
+}
+.fbar-search-clear.show{opacity:.6}
+.fbar-search-clear.show:hover{opacity:1}
+
+
 /* Chips visibles uniquement en mode compact */
 .fbar-chips-wrap{
   display:flex;align-items:center;gap:.5rem;flex:1;min-width:0;
@@ -210,7 +396,7 @@
 .bh{background:rgba(107,159,212,.18);color:var(--blue);border:1px solid rgba(107,159,212,.3)}
 .dep-tags{display:flex;gap:.35rem;flex-wrap:wrap;justify-content:flex-end}
 .dtag{padding:.22rem .6rem;background:rgba(13,13,15,.7);border:1px solid var(--border2);border-radius:100px;font-size:.62rem;color:var(--muted);color:var(--purple);background:rgba(155,127,212,.12)}
-.cbody{padding:1.3rem;flex:1;display:flex;flex-direction:column}
+.cbody{padding:1.3rem;flex:1;display:flex;flex-direction:column;position:relative;z-index:2}
 .ccountry{font-size:.63rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:.25rem;text-decoration:none;display:flex;align-items:center;flex-wrap:wrap;gap:.4rem;cursor:pointer}
 .ccountry:hover{color:var(--accent2)}
 .ccity{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;line-height:1;margin-bottom:.6rem}
@@ -239,7 +425,7 @@
 .links-section{margin-bottom:1.1rem}
 .links-title{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:.55rem;font-weight:700}
 .links-row{display:flex;gap:.5rem;flex-wrap:wrap}
-.clink{display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.65rem .8rem;border-radius:10px;border:1px solid var(--border2);font-size:.76rem;font-weight:600;color:var(--text);text-decoration:none;transition:all .2s ease;background:rgba(255,255,255,.05);flex:1;min-width:calc(50% - .2rem);cursor:pointer;letter-spacing:.01em}
+.clink{display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.65rem .8rem;border-radius:10px;border:1px solid var(--border2);font-size:.76rem;font-weight:600;color:var(--text);text-decoration:none;transition:all .2s ease;background:rgba(255,255,255,.05);flex:1;min-width:calc(50% - .2rem);cursor:pointer;letter-spacing:.01em;position:relative;z-index:10}
 .clink:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .clink.gf:hover{border-color:rgba(66,133,244,.5);color:#4285f4;background:rgba(66,133,244,.08)}
 .clink.sk:hover{border-color:rgba(0,166,251,.5);color:#00a6fb;background:rgba(0,166,251,.08)}
@@ -476,7 +662,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 .card-tab{flex:1;min-width:70px;padding:.6rem .2rem;border:none;background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-size:.71rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;border-bottom:2px solid transparent;text-align:center}
 .card-tab:hover{color:var(--text);background:rgba(255,255,255,.04)}
 .card-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(200,169,110,.05)}
-.card-panel{display:none;padding:.9rem 0 0;animation:fi .2s ease}
+.card-panel{display:none;padding:.9rem 0 0;animation:fi .2s ease;position:relative;z-index:5}
 .card-panel.active{display:block}
 .fav-btn{position:absolute;top:.65rem;right:.65rem;z-index:4;background:rgba(13,13,15,.6);border:1px solid var(--border2);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem;transition:all .2s;line-height:1}
 .fav-btn:hover{transform:scale(1.15);border-color:rgba(229,67,67,.5)}
@@ -918,26 +1104,37 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
     <div class="hero-filters-col">
       <div class="hero-filters-title">🎯 Filtrer les destinations</div>
 
+      <!-- SÉLECTEUR DE DÉPART GLOBAL -->
+      <div class="dep-global-wrap">
+        <span class="dep-global-label">✈ Je pars de :</span>
+        <div class="dep-global-pills">
+          <button class="dep-global-btn active" data-dep="all" onclick="setDepGlobal(this,'all')" aria-pressed="true" aria-label="Toutes les villes de départ">🌐 Tous</button>
+          <button class="dep-global-btn" data-dep="mrs" onclick="setDepGlobal(this,'mrs')" aria-pressed="false" aria-label="Départ depuis Marseille">✈ Marseille</button>
+          <button class="dep-global-btn" data-dep="mpl" onclick="setDepGlobal(this,'mpl')" aria-pressed="false" aria-label="Départ depuis Montpellier">✈ Montpellier</button>
+          <button class="dep-global-btn paris" data-dep="cdg" onclick="setDepGlobal(this,'cdg')" aria-pressed="false" aria-label="Départ depuis Paris CDG via train">🚄 Via Paris CDG</button>
+        </div>
+      </div>
+
       <div class="fbar-row fbar-row1" style="border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:.8rem">
         <div class="fgroup-block">
           <span class="flabel">💰 Budget</span>
           <div class="fpills">
-            <button class="fbtn active" data-group="budget" data-val="all" onclick="fBudget(this,'all')" aria-pressed="true">Tous</button>
-            <button class="fbtn" data-group="budget" data-val="low" onclick="fBudget(this,'low')">🟢 Petit</button>
-            <button class="fbtn" data-group="budget" data-val="mid" onclick="fBudget(this,'mid')">🟡 Moyen</button>
-            <button class="fbtn" data-group="budget" data-val="high" onclick="fBudget(this,'high')">💎 Premium</button>
+            <button class="fbtn active" data-group="budget" data-val="all" onclick="fBudget(this,'all')" aria-pressed="true" aria-label="Tous les budgets">Tous</button>
+            <button class="fbtn" data-group="budget" data-val="low" onclick="fBudget(this,'low')" aria-label="Petit budget">🟢 Petit</button>
+            <button class="fbtn" data-group="budget" data-val="mid" onclick="fBudget(this,'mid')" aria-label="Budget moyen">🟡 Moyen</button>
+            <button class="fbtn" data-group="budget" data-val="high" onclick="fBudget(this,'high')" aria-label="Budget premium">💎 Premium</button>
           </div>
         </div>
         <div class="fsep"></div>
         <div class="fgroup-block">
           <span class="flabel">🌍 Ambiance</span>
           <div class="fpills">
-            <button class="fbtn" data-group="tag" data-val="Plage" onclick="fTag(this,'Plage')">🏖 Plage</button>
-            <button class="fbtn" data-group="tag" data-val="Culture" onclick="fTag(this,'Culture')">🏛 Culture</button>
-            <button class="fbtn" data-group="tag" data-val="Nature" onclick="fTag(this,'Nature')">🌿 Nature</button>
-            <button class="fbtn" data-group="tag" data-val="City break" onclick="fTag(this,'City break')">🌆 City break</button>
-            <button class="fbtn" data-group="tag" data-val="Gastronomie" onclick="fTag(this,'Gastronomie')">🍽 Gastro</button>
-            <button class="fbtn" data-group="tag" data-val="Aventure" onclick="fTag(this,'Aventure')">🧗 Aventure</button>
+            <button class="fbtn" data-group="tag" data-val="Plage" onclick="fTag(this,'Plage')" aria-label="Filtrer Plage">🏖 Plage</button>
+            <button class="fbtn" data-group="tag" data-val="Culture" onclick="fTag(this,'Culture')" aria-label="Filtrer Culture">🏛 Culture</button>
+            <button class="fbtn" data-group="tag" data-val="Nature" onclick="fTag(this,'Nature')" aria-label="Filtrer Nature">🌿 Nature</button>
+            <button class="fbtn" data-group="tag" data-val="City break" onclick="fTag(this,'City break')" aria-label="Filtrer City break">🌆 City break</button>
+            <button class="fbtn" data-group="tag" data-val="Gastronomie" onclick="fTag(this,'Gastronomie')" aria-label="Filtrer Gastronomie">🍽 Gastro</button>
+            <button class="fbtn" data-group="tag" data-val="Aventure" onclick="fTag(this,'Aventure')" aria-label="Filtrer Aventure">🧗 Aventure</button>
           </div>
         </div>
         <div class="fsep"></div>
@@ -955,29 +1152,29 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
         <div class="fgroup-block">
           <span class="flabel">📅 Mois</span>
           <div class="fpills">
-            <button class="fbtn" data-group="month" data-val="0" onclick="fMonth(this,0)">Jan</button>
-            <button class="fbtn" data-group="month" data-val="1" onclick="fMonth(this,1)">Fév</button>
-            <button class="fbtn" data-group="month" data-val="2" onclick="fMonth(this,2)">Mar</button>
-            <button class="fbtn" data-group="month" data-val="3" onclick="fMonth(this,3)">Avr</button>
-            <button class="fbtn" data-group="month" data-val="4" onclick="fMonth(this,4)">Mai</button>
-            <button class="fbtn" data-group="month" data-val="5" onclick="fMonth(this,5)">Jun</button>
-            <button class="fbtn" data-group="month" data-val="6" onclick="fMonth(this,6)">Jul</button>
-            <button class="fbtn" data-group="month" data-val="7" onclick="fMonth(this,7)">Aoû</button>
-            <button class="fbtn" data-group="month" data-val="8" onclick="fMonth(this,8)">Sep</button>
-            <button class="fbtn" data-group="month" data-val="9" onclick="fMonth(this,9)">Oct</button>
-            <button class="fbtn" data-group="month" data-val="10" onclick="fMonth(this,10)">Nov</button>
-            <button class="fbtn" data-group="month" data-val="11" onclick="fMonth(this,11)">Déc</button>
+            <button class="fbtn" data-group="month" data-val="0" onclick="fMonth(this,0)" aria-label="Filtrer Janvier">Jan</button>
+            <button class="fbtn" data-group="month" data-val="1" onclick="fMonth(this,1)" aria-label="Filtrer Février">Fév</button>
+            <button class="fbtn" data-group="month" data-val="2" onclick="fMonth(this,2)" aria-label="Filtrer Mars">Mar</button>
+            <button class="fbtn" data-group="month" data-val="3" onclick="fMonth(this,3)" aria-label="Filtrer Avril">Avr</button>
+            <button class="fbtn" data-group="month" data-val="4" onclick="fMonth(this,4)" aria-label="Filtrer Mai">Mai</button>
+            <button class="fbtn" data-group="month" data-val="5" onclick="fMonth(this,5)" aria-label="Filtrer Juin">Jun</button>
+            <button class="fbtn" data-group="month" data-val="6" onclick="fMonth(this,6)" aria-label="Filtrer Juillet">Jul</button>
+            <button class="fbtn" data-group="month" data-val="7" onclick="fMonth(this,7)" aria-label="Filtrer Août">Aoû</button>
+            <button class="fbtn" data-group="month" data-val="8" onclick="fMonth(this,8)" aria-label="Filtrer Septembre">Sep</button>
+            <button class="fbtn" data-group="month" data-val="9" onclick="fMonth(this,9)" aria-label="Filtrer Octobre">Oct</button>
+            <button class="fbtn" data-group="month" data-val="10" onclick="fMonth(this,10)" aria-label="Filtrer Novembre">Nov</button>
+            <button class="fbtn" data-group="month" data-val="11" onclick="fMonth(this,11)" aria-label="Filtrer Décembre">Déc</button>
           </div>
         </div>
         <div class="fsep"></div>
         <div class="fgroup-block">
           <span class="flabel">🗺 Continent</span>
           <div class="fpills">
-            <button class="fbtn active" data-group="continent" data-val="all" onclick="fContinent(this,'all')">🌐 Tous</button>
-            <button class="fbtn" data-group="continent" data-val="europe" onclick="fContinent(this,'europe')">🇪🇺 Europe</button>
-            <button class="fbtn" data-group="continent" data-val="afrique" onclick="fContinent(this,'afrique')">🌍 Afrique</button>
-            <button class="fbtn" data-group="continent" data-val="asie" onclick="fContinent(this,'asie')">🌏 Asie</button>
-            <button class="fbtn" data-group="continent" data-val="ameriques" onclick="fContinent(this,'ameriques')">🌎 Amériques</button>
+            <button class="fbtn active" data-group="continent" data-val="all" onclick="fContinent(this,'all')" aria-label="Tous les continents">🌐 Tous</button>
+            <button class="fbtn" data-group="continent" data-val="europe" onclick="fContinent(this,'europe')" aria-label="Filtrer Europe">🇪🇺 Europe</button>
+            <button class="fbtn" data-group="continent" data-val="afrique" onclick="fContinent(this,'afrique')" aria-label="Filtrer Afrique">🌍 Afrique</button>
+            <button class="fbtn" data-group="continent" data-val="asie" onclick="fContinent(this,'asie')" aria-label="Filtrer Asie">🌏 Asie</button>
+            <button class="fbtn" data-group="continent" data-val="ameriques" onclick="fContinent(this,'ameriques')" aria-label="Filtrer Amériques">🌎 Amériques</button>
           </div>
         </div>
       </div>
@@ -1016,6 +1213,18 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 <!-- BARRE STICKY : résumé filtres + compteur -->
 <div class="fbar" id="fbar">
   <div class="fbar-compact-row">
+    <div class="fbar-dep-sticky" id="fbarDepSticky">
+      <button class="fbar-dep-btn active" data-dep="all" onclick="setDepGlobal(this,'all')" aria-label="Toutes villes">🌐</button>
+      <button class="fbar-dep-btn" data-dep="mrs" onclick="setDepGlobal(this,'mrs')" aria-label="Marseille">MRS</button>
+      <button class="fbar-dep-btn" data-dep="mpl" onclick="setDepGlobal(this,'mpl')" aria-label="Montpellier">MPL</button>
+      <button class="fbar-dep-btn paris" data-dep="cdg" onclick="setDepGlobal(this,'cdg')" aria-label="Paris CDG">CDG</button>
+    </div>
+    <div class="fbar-sticky-search">
+      <span class="fbar-search-ico">🔍</span>
+      <input class="fbar-search-input" id="fbarSearchInput" type="text" placeholder="Rechercher…" autocomplete="off"
+        oninput="fbarSearchOnInput(this.value)" />
+      <button class="fbar-search-clear" id="fbarSearchClear" onclick="fbarSearchReset()">✕</button>
+    </div>
     <div class="fbar-chips-wrap">
       <div class="fbar-active-chips" id="fbarActiveChips">
         <span class="fbar-no-filter" id="fbarNoFilter">Tous les filtres</span>
@@ -1026,6 +1235,24 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
       <button class="freset" onclick="resetFilters()" aria-label="Réinitialiser">✕ Réinitialiser</button>
     </div>
   </div>
+</div>
+
+<!-- LIGHTBOX PHOTO -->
+<div class="lb-overlay" id="lbOverlay" onclick="lbClose()">
+  <button class="lb-close" onclick="lbClose();event.stopPropagation()" aria-label="Fermer">✕</button>
+  <img class="lb-img" id="lbImg" src="" alt="" onclick="event.stopPropagation()">
+  <div class="lb-caption" id="lbCaption"></div>
+  <div class="lb-hint">Appuyer sur Échap ou cliquer pour fermer</div>
+</div>
+
+<!-- QUICK VIEW PANEL -->
+<div class="qvp-overlay" id="qvpOverlay" onclick="qvpClose()"></div>
+<div class="qvp-panel" id="qvpPanel">
+  <div class="qvp-header">
+    <div class="qvp-header-left" id="qvpHeaderLeft"></div>
+    <button class="qvp-close" onclick="qvpClose()">✕</button>
+  </div>
+  <div class="qvp-body" id="qvpBody"></div>
 </div>
 
 <!-- SMART DAY VIEWER -->
@@ -1062,8 +1289,7 @@ const fromIata = f => IATA_FROM[f] || f;
 const gfUrl=(from,city,iata)=>{
   const orig = fromIata(from);
   const dest = iata || city;
-  // Format qui ouvre directement la recherche de vols
-  return `https://www.google.com/travel/flights?q=Flights+from+${orig}+to+${encodeURIComponent(dest)}`;
+  return `https://www.google.com/travel/flights?q=Flights%20from%20${encodeURIComponent(orig)}%20to%20${encodeURIComponent(dest)}`;
 };
 const gfUrlSimple = gfUrl;
 
@@ -2991,7 +3217,7 @@ const TRAVEL_INFO={
 
 };
 
-let state={dep:'all',budget:'all',tag:null,price:'all',visa:null,month:null,continent:null,solo:null};
+let state={dep:'all',budget:'all',tags:new Set(),price:'all',visa:null,month:null,continent:null,solo:null};
 
 // Chaque catégorie : free (gratuites / quasi-gratuites), mid (abordables), prem (expériences)
 const ACTS={
@@ -6072,7 +6298,7 @@ function buildActList(items, city){
       <div class="act-item-desc">${a.desc}</div>
       <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:.25rem">
         <span class="act-item-price ${priceClass(a.price)}">${a.price}</span>
-        ${city?`<a href="${ml}" class="maps-btn-sm" onclick="window.open(this.href);return false;">📍 Maps</a>`:''}
+        ${city?`<a href="${ml}" class="maps-btn-sm" target="_blank" rel="noopener">📍 Maps</a>`:''}
       </div>
     </div>
   </div>`;
@@ -6137,7 +6363,7 @@ function buildGems(id){
         <div class="gem-desc">${gem.desc}</div>
         <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:.3rem">
           <span class="gem-tip">${gem.tag}</span>
-          <a class="maps-btn-sm" href="${mapsLink}" onclick="window.open(this.href);return false;">📍 Voir sur Maps</a>
+          <a class="maps-btn-sm" href="${mapsLink}" target="_blank" rel="noopener">📍 Voir sur Maps</a>
         </div>
       </div>
     </div>`;
@@ -6179,7 +6405,7 @@ function buildRestos(id){
         <div class="resto-meta">
           <span class="resto-price-badge">${r.price}</span>
           <span class="resto-vibe">${r.vibe}</span>
-          <a class="maps-btn-sm" href="${mapsLink}" onclick="window.open(this.href);return false;">📍 Voir sur Maps</a>
+          <a class="maps-btn-sm" href="${mapsLink}" target="_blank" rel="noopener">📍 Voir sur Maps</a>
         </div>
       </div>
     </div>`;
@@ -6203,8 +6429,8 @@ function buildRestos(id){
     <div class="resto-body">
       <div class="resto-list">${items}</div>
       <div class="maps-btn-wrap">
-        <a class="maps-btn" href="${itinRestos}" onclick="window.open(this.href);return false;">🗺 Itinéraire restaurants</a>
-        <a class="maps-btn" href="${itinCombo}" style="background:linear-gradient(135deg,#1e8e3e,#137333)" onclick="window.open(this.href);return false;">📍 Les 10 spots d'un coup</a>
+        <a class="maps-btn" href="${itinRestos}" target="_blank" rel="noopener">🗺 Itinéraire restaurants</a>
+        <a class="maps-btn" href="${itinCombo}" style="background:linear-gradient(135deg,#1e8e3e,#137333)" target="_blank" rel="noopener">📍 Les 10 spots d'un coup</a>
       </div>
     </div>
   </div>`;
@@ -6557,9 +6783,9 @@ function buildLinks(d, mode){
   const hebergHtml = `
     <div class="links-title">🏠 Hébergement</div>
     <div class="links-row">
-      <a class="clink ab" href="${abUrl(city)}" onclick="window.open(this.href);return false;">🏠 Airbnb</a>
-      <a class="clink bk" href="${bkUrl(city)}" onclick="window.open(this.href);return false;">🏨 Booking</a>
-      <a class="clink ta" href="${taUrl(city)}" onclick="window.open(this.href);return false;">🦉 Tripadvisor</a>
+      <a class="clink ab" href="${abUrl(city)}" target="_blank" rel="noopener">🏠 Airbnb</a>
+      <a class="clink bk" href="${bkUrl(city)}" target="_blank" rel="noopener">🏨 Booking</a>
+      <a class="clink ta" href="${taUrl(city)}" target="_blank" rel="noopener">🦉 Tripadvisor</a>
     </div>`;
 
   if(!iata){
@@ -6570,14 +6796,14 @@ function buildLinks(d, mode){
     return `<div class="links-section">
       <div class="links-title">🚄 TGV Montpellier → Paris CDG</div>
       <div class="links-row">
-        <a class="clink tr" href="${trainUrl()}" onclick="window.open(this.href);return false;">🚄 SNCF Connect</a>
-        <a class="clink tr" href="${ouigoUrl()}" onclick="window.open(this.href);return false;">💚 OUIGO</a>
+        <a class="clink tr" href="${trainUrl()}" target="_blank" rel="noopener">🚄 SNCF Connect</a>
+        <a class="clink tr" href="${ouigoUrl()}" target="_blank" rel="noopener">💚 OUIGO</a>
       </div>
       <div class="links-title" style="margin-top:.7rem">✈️ Vols depuis Paris CDG</div>
       <div class="links-row">
-        <a class="clink gf" href="${gfUrl('CDG',city,iata)}" onclick="window.open(this.href);return false;">🔵 Google Flights</a>
-        <a class="clink sk" href="${skUrl('CDG',iata)}" onclick="window.open(this.href);return false;">🌐 Skyscanner</a>
-        <a class="clink ks" href="${kkUrl('CDG',iata)}" onclick="window.open(this.href);return false;">🟠 Kayak</a>
+        <a class="clink gf" href="${gfUrl('CDG',city,iata)}" target="_blank" rel="noopener">🔵 Google Flights</a>
+        <a class="clink sk" href="${skUrl('CDG',iata)}" target="_blank" rel="noopener">🌐 Skyscanner</a>
+        <a class="clink ks" href="${kkUrl('CDG',iata)}" target="_blank" rel="noopener">🟠 Kayak</a>
       </div>
       ${hebergHtml}
     </div>`;
@@ -6588,15 +6814,15 @@ function buildLinks(d, mode){
 
   let flightLinks = '';
   if(hasMRS){
-    flightLinks += `<a class="clink gf" href="${gfUrl('MRS',city,iata)}" onclick="window.open(this.href);return false;">🔵 Google Flights (MRS)</a>
-      <a class="clink sk" href="${skUrl('MRS',iata)}" onclick="window.open(this.href);return false;">🌐 Skyscanner (MRS)</a>`;
+    flightLinks += `<a class="clink gf" href="${gfUrl('MRS',city,iata)}" target="_blank" rel="noopener">🔵 Google Flights (MRS)</a>
+      <a class="clink sk" href="${skUrl('MRS',iata)}" target="_blank" rel="noopener">🌐 Skyscanner (MRS)</a>`;
   }
   if(hasMPL){
-    flightLinks += `<a class="clink gf" href="${gfUrl('MPL',city,iata)}" onclick="window.open(this.href);return false;">🔵 Google Flights (MPL)</a>
-      <a class="clink sk" href="${skUrl('MPL',iata)}" onclick="window.open(this.href);return false;">🌐 Skyscanner (MPL)</a>`;
+    flightLinks += `<a class="clink gf" href="${gfUrl('MPL',city,iata)}" target="_blank" rel="noopener">🔵 Google Flights (MPL)</a>
+      <a class="clink sk" href="${skUrl('MPL',iata)}" target="_blank" rel="noopener">🌐 Skyscanner (MPL)</a>`;
   }
   const fromKk = hasMRS ? 'MRS' : 'MPL';
-  flightLinks += `<a class="clink ks" href="${kkUrl(fromKk,iata)}" onclick="window.open(this.href);return false;">🟠 Kayak</a>`;
+  flightLinks += `<a class="clink ks" href="${kkUrl(fromKk,iata)}" target="_blank" rel="noopener">🟠 Kayak</a>`;
 
   return `<div class="links-section">
     <div class="links-title">✈️ Comparer les vols</div>
@@ -6703,7 +6929,8 @@ function buildCard(d){
   el.innerHTML=`
     <div class="ctop">
       <div class="ctop-bg" id="ctopbg-${d.id}" style="background:${d.gradient}"
-        data-thumb="${d.imgT||''}" data-hd="${d.imgH||''}">
+        data-thumb="${d.imgT||''}" data-hd="${d.imgH||''}"
+        onclick="lbOpen(this,'${d.city}, ${d.country}')" title="Voir en plein écran">
         <span class="ctop-emoji">${d.emoji}</span>
       </div>
       <div class="ctop-ov"></div>
@@ -6712,9 +6939,9 @@ function buildCard(d){
       <button class="cmp-card-btn" onclick="cmpFromCard(${d.id})" title="Ajouter au comparateur" aria-label="Comparer ${d.city}">⚖️</button>
     </div>
     <div class="cbody">
-      <a class="ccountry" href="${gfUrl('Montpellier',d.city)}" title="Rechercher des vols vers ${d.city}" onclick="window.open(this.href);return false;">${d.country}<span class="card-budget-chip ${d.budget}" id="budget-chip-${d.id}">${{low:'🟢 Petit budget',mid:'🟡 Inter.',high:'💎 Premium'}[d.budget]}</span></a>
+      <a class="ccountry" href="${gfUrl('Montpellier',d.city)}" title="Rechercher des vols vers ${d.city}" target="_blank" rel="noopener">${d.country}<span class="card-budget-chip ${d.budget}" id="budget-chip-${d.id}">${{low:'🟢 Petit budget',mid:'🟡 Inter.',high:'💎 Premium'}[d.budget]}</span></a>
       ${buildVisa(d.id)}
-      <div class="ccity" style="display:flex;align-items:center;flex-wrap:wrap;gap:.3rem"><a href="${gfUrl('Montpellier',d.city)}" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(200,169,110,.3);padding-bottom:1px" title="Google Flights vers ${d.city}" onclick="window.open(this.href);return false;">✈ ${d.city}</a><span class="weather-inline" id="weather-${d.id}" onclick="fetchWeather(${d.id})" title="Cliquer pour la météo actuelle">🌦 Météo</span>${buildLocalTimeBadge(d.id)}</div>
+      <div class="ccity" style="display:flex;align-items:center;flex-wrap:wrap;gap:.3rem"><a href="${gfUrl('Montpellier',d.city)}" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(200,169,110,.3);padding-bottom:1px" title="Google Flights vers ${d.city}" target="_blank" rel="noopener">✈ ${d.city}</a><span class="weather-inline" id="weather-${d.id}" onclick="fetchWeather(${d.id})" title="Cliquer pour la météo actuelle">🌦 Météo</span>${buildLocalTimeBadge(d.id)}</div>
       <div class="cdesc">${d.desc}</div>
       <div class="ctags">${tags}</div>
       <div class="card-price-row" id="prow-${d.id}">
@@ -6723,6 +6950,9 @@ function buildCard(d){
         <span class="card-price-label" id="plabel-${d.id}">/ pers · vol A/R</span>
       </div>
       ${buildBookingPredictor(d.id)}
+      <button class="qv-detail-btn" onclick="qvpOpen(${d.id});event.stopPropagation()">
+        🗂 Vols &amp; Détails complets
+      </button>
 
       
       <div class="card-tabs" id="ctabs-${d.id}">
@@ -7450,6 +7680,11 @@ function toggleFav(id, btn){
   try { localStorage.setItem('horizons_favs', JSON.stringify(favs)); } catch(e) {}
   btn.classList.toggle('active', !!favs[sid]);
   btn.textContent = favs[sid] ? '❤️' : '🤍';
+  // Animation pulsation
+  btn.classList.remove('beating');
+  void btn.offsetWidth; // force reflow pour relancer l'animation
+  btn.classList.add('beating');
+  btn.addEventListener('animationend', ()=>btn.classList.remove('beating'), {once:true});
   const d = DATA.find(x=>x.id===id);
   if(btn && d) btn.setAttribute('aria-label', favs[sid] ? `Retirer ${d.city} des favoris` : `Ajouter ${d.city} aux favoris`);
   if(typeof updateFavFbarBtn === 'function') updateFavFbarBtn();
@@ -7511,7 +7746,7 @@ function render(){
       || (state.dep==='mrs' && d.dep.includes('mrs'))
       || (state.dep==='mpl' && d.dep.includes('mpl'));
     const budgetOk=state.budget==='all'||d.budget===state.budget;
-    const tagOk=!state.tag||d.tags.includes(state.tag);
+    const tagOk=state.tags.size===0||[...state.tags].every(t=>d.tags.includes(t));
     const continentOk=!state.continent||d.continent===state.continent;
     const tot=getBudgetTotal(d);
     const priceOk=state.price==='all'
@@ -7546,9 +7781,49 @@ function render(){
 
 function updateAcardCounts(){}
 
+/* ─── SÉLECTEUR DÉPART GLOBAL ─── */
+function setDepGlobal(el, val){
+  // Mettre à jour tous les boutons hero
+  document.querySelectorAll('.dep-global-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.dep === val);
+    b.setAttribute('aria-pressed', b.dataset.dep === val ? 'true' : 'false');
+  });
+  // Mettre à jour tous les boutons fbar sticky
+  document.querySelectorAll('.fbar-dep-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.dep === val);
+  });
+  // Mettre à jour state et re-render
+  state.dep = val;
+  showSkeletons();
+  setTimeout(render, 50);
+  updateFbarChips();
+  // Chip dans la fbar
+  const chip = document.getElementById('fbar-dep-chip');
+  if(val === 'all'){
+    if(chip) chip.remove();
+  } else {
+    const labels = {mrs:'✈ Marseille', mpl:'✈ Montpellier', cdg:'🚄 Via Paris CDG'};
+    if(!chip){
+      const c = document.createElement('span');
+      c.id = 'fbar-dep-chip';
+      c.className = 'fbar-chip fbar-chip-dep';
+      c.style.cssText = 'background:rgba(200,169,110,.12);border:1px solid rgba(200,169,110,.35);color:var(--accent2);cursor:pointer';
+      c.textContent = labels[val] + ' ✕';
+      c.title = 'Réinitialiser le départ';
+      c.onclick = ()=>setDepGlobal(document.querySelector('.dep-global-btn[data-dep="all"]'), 'all');
+      const container = document.getElementById('fbarActiveChips');
+      if(container) container.prepend(c);
+    } else {
+      chip.textContent = labels[val] + ' ✕';
+      chip.onclick = ()=>setDepGlobal(document.querySelector('.dep-global-btn[data-dep="all"]'), 'all');
+    }
+  }
+}
+
 function fDep(val){
-  state.dep=val; showSkeletons();
-  setTimeout(render,50);
+  // Redirige vers setDepGlobal pour la cohérence
+  const btn = document.querySelector(`.dep-global-btn[data-dep="${val}"]`);
+  setDepGlobal(btn, val);
 }
 function fBudget(el,val){
   document.querySelectorAll('.fbtn[data-group="budget"]').forEach(b=>b.classList.remove('active'));
@@ -7567,10 +7842,14 @@ function fPrice(el,val){
   el.classList.add('active'); state.price=val; render();
 }
 function fTag(el,val){
-  const was=el.classList.contains('active');
-  document.querySelectorAll('.fbtn[data-group="tag"]').forEach(b=>b.classList.remove('active'));
-  state.tag=was?null:val;
-  if(!was) el.classList.add('active');
+  if(el.classList.contains('active')){
+    el.classList.remove('active');
+    state.tags.delete(val);
+  } else {
+    el.classList.add('active');
+    state.tags.add(val);
+  }
+  applyAccentTheme([...state.tags]);
   showSkeletons();
   setTimeout(render,50);
   updateFbarChips();
@@ -7601,7 +7880,7 @@ function fContinent(el,val){
   updateFbarChips();
 }
 function resetFilters(){
-  state={dep:'all',budget:'all',tag:null,price:'all',visa:null,month:null,continent:null,solo:null};
+  state={dep:'all',budget:'all',tags:new Set(),price:'all',visa:null,month:null,continent:null,solo:null};
   try{ localStorage.removeItem(FILTERS_KEY); }catch(e){}
   if(window._resetBudgetSlider) window._resetBudgetSlider();
   const si=document.getElementById('searchInput');
@@ -7616,6 +7895,7 @@ function resetFilters(){
   if(soloBanner) soloBanner.style.display='none';
   document.querySelector('.fbtn[data-group="budget"][data-val="all"]').classList.add('active');
   document.querySelectorAll('.fbtn[data-group="tag"],.fbtn[data-group="visa"],.fbtn[data-group="month"]').forEach(b=>b.classList.remove('active'));
+  applyAccentTheme([]);
   render();
   updateFbarChips();
 }
@@ -8227,6 +8507,104 @@ let _sdCurrentId = null;
 
 function sdRandFrom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
+
+
+
+/* ─── FBAR STICKY SEARCH ─── */
+function fbarSearchOnInput(val){
+  _searchTerm = val.toLowerCase().trim();
+  const clearBtn = document.getElementById('fbarSearchClear');
+  if(clearBtn) clearBtn.classList.toggle('show', val.length > 0);
+  // Sync with hero search input
+  const heroInput = document.getElementById('searchInput');
+  if(heroInput && heroInput.value !== val) heroInput.value = val;
+  const heroClear = document.getElementById('searchClear');
+  if(heroClear) heroClear.classList.toggle('show', val.length > 0);
+  render();
+}
+function fbarSearchReset(){
+  _searchTerm = '';
+  const fbarInput = document.getElementById('fbarSearchInput');
+  if(fbarInput) fbarInput.value = '';
+  const clearBtn = document.getElementById('fbarSearchClear');
+  if(clearBtn) clearBtn.classList.remove('show');
+  const heroInput = document.getElementById('searchInput');
+  if(heroInput) heroInput.value = '';
+  const heroClear = document.getElementById('searchClear');
+  if(heroClear) heroClear.classList.remove('show');
+  render();
+}
+
+
+
+/* ─── LIGHTBOX ─── */
+function lbOpen(bgEl, caption){
+  const hd  = bgEl.dataset.hd;
+  const thumb = bgEl.dataset.thumb;
+  const src = hd || thumb;
+  if(!src) return;
+  const overlay = document.getElementById('lbOverlay');
+  const img     = document.getElementById('lbImg');
+  const cap     = document.getElementById('lbCaption');
+  img.src = src;
+  img.alt = caption || '';
+  cap.textContent = caption || '';
+  overlay.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function lbClose(){
+  const overlay = document.getElementById('lbOverlay');
+  overlay.classList.remove('show');
+  document.body.style.overflow = '';
+  setTimeout(()=>{ document.getElementById('lbImg').src = ''; }, 300);
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') lbClose(); });
+
+/* ─── ANIMATION FAVORIS ─── */
+// Keyframes injectés dynamiquement une seule fois
+(function injectFavAnim(){
+  if(document.getElementById('fav-pulse-style')) return;
+  const s = document.createElement('style');
+  s.id = 'fav-pulse-style';
+  s.textContent = `
+    @keyframes favPulse{
+      0%  {transform:scale(1)}
+      25% {transform:scale(1.55)}
+      50% {transform:scale(.88)}
+      70% {transform:scale(1.3)}
+      100%{transform:scale(1)}
+    }
+    .fav-btn.beating{animation:favPulse .45s cubic-bezier(.2,.8,.2,1)}
+  `;
+  document.head.appendChild(s);
+})();
+
+/* ─── ACCENT DYNAMIQUE SELON AMBIANCE ─── */
+const ACCENT_BY_TAG = {
+  'Plage':       {accent:'#3ec9c9', accent2:'#5de0e0', dim:'rgba(62,201,201,0.15)'},
+  'Nature':      {accent:'#4caf7d', accent2:'#6dcf9a', dim:'rgba(76,175,125,0.15)'},
+  'Aventure':    {accent:'#e07b3a', accent2:'#f5975a', dim:'rgba(224,123,58,0.15)'},
+  'Culture':     {accent:'#9b7fd4', accent2:'#b99ee8', dim:'rgba(155,127,212,0.15)'},
+  'City break':  {accent:'#6b9fd4', accent2:'#8bbfee', dim:'rgba(107,159,212,0.15)'},
+  'Gastronomie': {accent:'#d4756b', accent2:'#e89089', dim:'rgba(212,117,107,0.15)'},
+};
+const ACCENT_DEFAULT = {accent:'#c8a96e', accent2:'#e2c48a', dim:'rgba(200,169,110,0.15)'};
+
+function applyAccentTheme(tags){
+  // Si plusieurs tags, prend le premier trouvé dans ACCENT_BY_TAG
+  let theme = ACCENT_DEFAULT;
+  for(const t of tags){
+    if(ACCENT_BY_TAG[t]){ theme = ACCENT_BY_TAG[t]; break; }
+  }
+  const root = document.documentElement;
+  root.style.setProperty('--accent',    theme.accent);
+  root.style.setProperty('--accent2',   theme.accent2);
+  root.style.setProperty('--accent-dim',theme.dim);
+
+  // Transition douce sur le root
+  root.style.transition = 'color .3s';
+}
+
 function sdGenerate(id){
   _sdCurrentId = id;
   const d = DATA.find(x=>x.id===id);
@@ -8333,7 +8711,7 @@ function sdGenerate(id){
           ${item.price?`<span class="sd-chip ${slot.cat}">💰 ${item.price}</span>`:''}
           ${slot.duration?`<span class="sd-chip blue">⏱ ${slot.duration}</span>`:''}
           ${slot.tips?`<span class="sd-chip gold">💡 ${slot.tips}</span>`:''}
-          <a href="${mapsUrl}" style="margin-left:auto;font-size:.6rem;color:#6b9fd4;text-decoration:none;opacity:.65;display:flex;align-items:center;gap:.2rem" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.65" onclick="window.open(this.href);return false;">📍 Maps</a>
+          <a href="${mapsUrl}" style="margin-left:auto;font-size:.6rem;color:#6b9fd4;text-decoration:none;opacity:.65;display:flex;align-items:center;gap:.2rem" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.65" target="_blank" rel="noopener">📍 Maps</a>
         </div>
       </div>`;
     tl.appendChild(slotEl);
@@ -8456,6 +8834,11 @@ function _hl(text, q){
 }
 
 function searchOnInput(val){
+  // Sync fbar sticky search
+  const fbarInput = document.getElementById('fbarSearchInput');
+  if(fbarInput && fbarInput.value !== val) fbarInput.value = val;
+  const fbarClear = document.getElementById('fbarSearchClear');
+  if(fbarClear) fbarClear.classList.toggle('show', val.length > 0);
   _searchTerm = val.trim();
   _searchIdx  = -1;
   document.getElementById('searchClear').classList.toggle('show', val.length > 0);
